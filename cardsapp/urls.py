@@ -7,5 +7,6 @@ from card import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.cards_list, name='cards_list'),
-    path('generator/', views.card_generator, name='card_generator')
+    path('generator/', views.card_generator, name='card_generator'),
+    path('profile/', views.card_profile, name='card_profile')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
