@@ -1,6 +1,11 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
+from card import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    path('', views.cards_list, name='cards_list'),
+    path('generator/', views.card_generator, name='card_generator')
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
