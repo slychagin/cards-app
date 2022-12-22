@@ -1,5 +1,5 @@
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from card.forms import CardGenerateForm
@@ -10,6 +10,14 @@ def cards_list(request):
     """Render home page. Show card list"""
     all_cards = Card.objects.filter()
     cards_idx = [i + 1 for i, card in enumerate(all_cards)]
+
+    # update card status if term_activity grater than current date
+    now = datetime.now(timezone.utc)
+
+    for card in all_cards:
+        if card.end_activity_date < now:
+            card.status = 'expired'
+            card.save()
 
     context = {
         'user': request.user,
@@ -60,6 +68,14 @@ def card_generator(request):
 def card_profile(request):
     """Render card profile page"""
     return render(request, 'card_profile.html')
+
+
+def delete_card(request, card_id):
+    """Delete chose card"""
+    if request.user.is_authenticated:
+        card = Card.objects.get(id=card_id)
+        card.delete()
+    return redirect('cards_list')
 
 
 def generate_card_numbers(card_series, digits_number, card_number):

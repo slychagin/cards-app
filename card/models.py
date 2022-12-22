@@ -32,3 +32,6 @@ class Card(models.Model):
 
     def __str__(self):
         return f'{self.card_series} {self.card_number}'
+
+    def change(self):
+        print('OK')

@@ -48,6 +48,7 @@
                                 <th scope="col">Дата выпуска</th>
                                 <th scope="col">Дата окончания активности</th>
                                 <th scope="col">Статус</th>
+                                <th scope="col">Удалить</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -60,6 +61,10 @@
                                 <td>{{ card.created_date }}</td>
                                 <td>{{ card.end_activity_date }}</td>
                                 <td>{{ card.status }}</td>
+                                <td><a href="{% url 'delete_card' card.pk %}"
+                                   onclick="return confirm('Вы уверены, что хотите удалить данную карту?')"
+                                   class="btn btn-outline-secondary btn-sm" >Удалить</a>
+                                </td>
                             </tr>
                             {% endfor %}
 
