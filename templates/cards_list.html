@@ -29,6 +29,7 @@
 <main id="main" class="main">
     <div class="pagetitle" align="center">
         <h1>Список карт</h1>
+        {% include 'includes/alerts.html' %}
         <br>
     </div><!-- End Page Title -->
 
@@ -48,6 +49,7 @@
                                 <th scope="col">Дата выпуска</th>
                                 <th scope="col">Дата окончания активности</th>
                                 <th scope="col">Статус</th>
+                                <th scope="col">Активация</th>
                                 <th scope="col">Удалить</th>
                             </tr>
                             </thead>
@@ -60,24 +62,44 @@
                                 <td>{{ card.card_number }}</td>
                                 <td>{{ card.created_date }}</td>
                                 <td>{{ card.end_activity_date }}</td>
-                                <td>{{ card.status }}</td>
+
+
+                                {% if card.status == 'not_activated' %}
+                                <td>{{ card.get_status_display }}</td>
+                                {% elif card.status == 'activated' %}
+                                <td style="color:#82CD47">{{ card.get_status_display }}</td>
+                                {% else %}
+                                <td style="color:red">{{ card.get_status_display }}</td>
+                                {% endif %}
+
+
+                                {% if card.status == 'not_activated' %}
+                                <td><a href="{% url 'activate_card' card.pk %}"
+                                   class="btn btn-outline-primary btn-sm">Активировать</a>
+                                </td>
+                                {% elif card.status == 'activated' %}
+                                <td><a href="{% url 'activate_card' card.pk %}"
+                                   class="btn btn-outline-dark btn-sm">Деактивация</a>
+                                </td>
+                                {% else %}
+                                <td></td>
+                                {% endif %}
+
+
                                 <td><a href="{% url 'delete_card' card.pk %}"
                                    onclick="return confirm('Вы уверены, что хотите удалить данную карту?')"
-                                   class="btn btn-outline-secondary btn-sm" >Удалить</a>
+                                   class="btn btn-outline-danger btn-sm" >Удалить</a>
                                 </td>
                             </tr>
                             {% endfor %}
 
                             </tbody>
                         </table>
-
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
-
 </main>
 
 {% endblock %}

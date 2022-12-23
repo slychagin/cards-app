@@ -9,5 +9,6 @@ urlpatterns = [
     path('', views.cards_list, name='cards_list'),
     path('generator/', views.card_generator, name='card_generator'),
     path('profile/', views.card_profile, name='card_profile'),
-    path('delete/<int:card_id>/', views.delete_card, name='delete_card')
+    path('delete/<int:card_id>/', views.delete_card, name='delete_card'),
+    path('activate/<int:card_id>/', views.activate_card, name='activate_card')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

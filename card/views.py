@@ -75,7 +75,28 @@ def delete_card(request, card_id):
     if request.user.is_authenticated:
         card = Card.objects.get(id=card_id)
         card.delete()
-    return redirect('cards_list')
+        return redirect('cards_list')
+    else:
+        messages.error(request, 'Чтобы удалить карту, войдите в систему!')
+        return redirect('cards_list')
+
+
+def activate_card(request, card_id):
+    """Activate or deactivate card"""
+    if request.user.is_authenticated:
+        card = Card.objects.get(id=card_id)
+        card_status = card.status
+
+        if card_status == 'activated':
+            card.status = 'not_activated'
+        else:
+            card.status = 'activated'
+        card.save()
+
+        return redirect('cards_list')
+    else:
+        messages.error(request, 'Чтобы изменить статус карты, войдите в систему!')
+        return redirect('cards_list')
 
 
 def generate_card_numbers(card_series, digits_number, card_number):

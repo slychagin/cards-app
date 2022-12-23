@@ -7,15 +7,14 @@ def get_default_end_activity_date():
     return datetime.now() + timedelta(days=365)
 
 
-STATUS_CHOICES = (
-    ('not_activated', 'Не активирована'),
-    ('activated', 'Активирована'),
-    ('expired', 'Просрочена'),
-)
-
-
 class Card(models.Model):
     """Create Card model"""
+    STATUS_CHOICES = [
+        ('not_activated', 'Не активирована'),
+        ('activated', 'Активирована'),
+        ('expired', 'Просрочена'),
+    ]
+
     objects = models.Manager()
 
     card_series = models.CharField(max_length=4, verbose_name='Серия карты')
@@ -32,6 +31,3 @@ class Card(models.Model):
 
     def __str__(self):
         return f'{self.card_series} {self.card_number}'
-
-    def change(self):
-        print('OK')
