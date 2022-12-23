@@ -8,7 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.cards_list, name='cards_list'),
     path('generator/', views.card_generator, name='card_generator'),
-    path('profile/', views.card_profile, name='card_profile'),
+    path('profile/<int:card_id>/', views.card_profile, name='card_profile'),
     path('delete/<int:card_id>/', views.delete_card, name='delete_card'),
     path('activate/<int:card_id>/', views.activate_card, name='activate_card'),
     path('search/', views.search, name='search')

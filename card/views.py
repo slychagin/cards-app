@@ -83,12 +83,18 @@ def generate_card_numbers(card_series, digits_number, card_number):
     return unique_card_numbers
 
 
-def card_profile(request):
+def card_profile(request, card_id):
     """Render card profile page"""
+    if request.user.is_authenticated:
+        card = Card.objects.get(id=card_id)
 
-
-
-    return render(request, 'card_profile.html')
+        context = {
+            'card': card
+        }
+        return render(request, 'card_profile.html', context)
+    else:
+        messages.error(request, 'Чтобы открыть профиль карты, войдите в систему!')
+        return redirect('cards_list')
 
 
 def delete_card(request, card_id):

@@ -7,34 +7,46 @@
 
     <div class="pagetitle">
       <h1>Профиль карты</h1>
-    </div><!-- End Page Title -->
+    </div>
 
     <section class="section">
       <div class="row">
         <div class="col-lg-6">
-
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Example Card</h5>
-              <p>This is an examle page with no contrnt. You can use it as a starter for your custom pages.</p>
+              <h5 class="card-title">Серия карты: <span>{{ card.card_series }}</span></h5>
+              <h5 class="card-title">Номер карты: <span>{{ card.card_number }}</span></h5>
+              <h5 class="card-title">Дата выпуска: <span>{{ card.created_date }}</span></h5>
+              <h5 class="card-title">Дата окончания активности: <span>{{ card.end_activity_date }}</span></h5>
+              <h5 class="card-title">Дата последнего использования: <span>{{ card.use_date }}</span></h5>
+              <h5 class="card-title">Сумма: <span>{{ card.total }}</span></h5>
+
+              {% if card.status == 'not_activated' %}
+              <h5 class="card-title">Статус: <span>{{ card.get_status_display }}</span></h5>
+              {% elif card.status == 'activated'%}
+              <h5 class="card-title">Статус: <span style="color:#82CD47">{{ card.get_status_display }}</span></h5>
+              {% else %}
+              <h5 class="card-title">Статус: <span style="color:red">{{ card.get_status_display }}</span></h5>
+              {% endif %}
+
             </div>
           </div>
-
         </div>
 
         <div class="col-lg-6">
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Example Card</h5>
-              <p>This is an examle page with no contrnt. You can use it as a starter for your custom pages.</p>
+              <h5 class="card-title">История покупок</h5>
+              <br>
+              <p>Дата покупки: {{ card.use_date }}</p>
+              <p>Сумма покупки: </p>
             </div>
           </div>
 
         </div>
       </div>
     </section>
-
-  </main><!-- End #main -->
+  </main>
 
 {% endblock %}

@@ -15,13 +15,6 @@
             </a>
         </li>
 
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="{% url 'card_profile' %}">
-                <i class="bi bi-file-earmark"></i>
-                <span>Детали карты</span>
-            </a>
-        </li>
-
     </ul>
 
 </aside>
@@ -58,8 +51,8 @@
                             {% for card in cards %}
                             <tr>
                                 <td scope="row">{{ cards_idx|get_index:forloop.counter0 }}</td>
-                                <td>{{ card.card_series }}</td>
-                                <td>{{ card.card_number }}</td>
+                                <td><a href="{% url 'card_profile' card.pk %}" title="Открыть профиль карты">{{ card.card_series }}</a></td>
+                                <td><a href="{% url 'card_profile' card.pk %}" title="Открыть профиль карты">{{ card.card_number }}</a></td>
                                 <td>{{ card.created_date }}</td>
                                 <td>{{ card.end_activity_date }}</td>
 

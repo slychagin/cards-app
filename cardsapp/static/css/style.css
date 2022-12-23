@@ -249,7 +249,7 @@ h6 {
 }
 
 .card-title {
-  padding: 20px 0 15px 0;
+  padding: 20px 0 0 0;
   font-size: 18px;
   font-weight: 500;
   color: #012970;
@@ -257,8 +257,8 @@ h6 {
 }
 
 .card-title span {
-  color: #899bbd;
-  font-size: 14px;
+  color: #7C3E66;
+  font-size: 20px;
   font-weight: 400;
 }
 
