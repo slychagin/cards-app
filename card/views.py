@@ -1,6 +1,7 @@
 import random
 from datetime import datetime, timedelta, timezone
 from django.contrib import messages
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from card.forms import CardGenerateForm
 from card.models import Card
@@ -8,20 +9,20 @@ from card.models import Card
 
 def cards_list(request):
     """Render home page. Show card list"""
-    all_cards = Card.objects.filter()
-    cards_idx = [i + 1 for i, card in enumerate(all_cards)]
+    cards = Card.objects.filter().order_by('-created_date')
+    cards_idx = [i + 1 for i, card in enumerate(cards)]
 
     # update card status if term_activity grater than current date
     now = datetime.now(timezone.utc)
 
-    for card in all_cards:
+    for card in cards:
         if card.end_activity_date < now:
             card.status = 'expired'
             card.save()
 
     context = {
         'user': request.user,
-        'all_cards': all_cards,
+        'cards': cards,
         'cards_idx': cards_idx,
     }
     return render(request, 'cards_list.html', context)
@@ -65,8 +66,28 @@ def card_generator(request):
     return render(request, 'card_generator.html', context)
 
 
+def generate_card_numbers(card_series, digits_number, card_number):
+    """
+    Generates a list of card numbers depending on
+    the number of cards entered by the user
+    """
+    cards = Card.objects.filter(card_series=card_series)
+    existing_card_numbers = [card.card_number for card in cards]
+
+    lower_range_limit = int('1' + '0'*(digits_number - 1))
+    upper_range_limit = int('9'*digits_number)
+
+    cards_numbers = random.sample(range(lower_range_limit, upper_range_limit + 1), card_number)
+    unique_card_numbers = [num for num in cards_numbers if num not in existing_card_numbers]
+
+    return unique_card_numbers
+
+
 def card_profile(request):
     """Render card profile page"""
+
+
+
     return render(request, 'card_profile.html')
 
 
@@ -99,18 +120,25 @@ def activate_card(request, card_id):
         return redirect('cards_list')
 
 
-def generate_card_numbers(card_series, digits_number, card_number):
-    """
-    Generates a list of card numbers depending on
-    the number of cards entered by the user
-    """
-    cards = Card.objects.filter(card_series=card_series)
-    existing_card_numbers = [card.card_number for card in cards]
+def search(request):
+    """Search card by keyword"""
+    all_cards = None
+    if 'query' in request.GET:
+        query = request.GET['query']
+        if query:
+            cards = Card.objects.order_by('-created_date').filter(
+                Q(card_series__icontains=query) |
+                Q(card_number__icontains=query) |
+                Q(created_date__icontains=query) |
+                Q(end_activity_date__icontains=query) |
+                Q(status__icontains=query)
+            )
+            cards_idx = [i + 1 for i, card in enumerate(cards)]
+        if not query:
+            return redirect('cards_list')
 
-    lower_range_limit = int('1' + '0'*(digits_number - 1))
-    upper_range_limit = int('9'*digits_number)
-
-    cards_numbers = random.sample(range(lower_range_limit, upper_range_limit + 1), card_number)
-    unique_card_numbers = [num for num in cards_numbers if num not in existing_card_numbers]
-
-    return unique_card_numbers
+    context = {
+        'cards': cards,
+        'cards_idx': cards_idx
+    }
+    return render(request, 'cards_list.html', context)

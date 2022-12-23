@@ -55,9 +55,9 @@
                             </thead>
                             <tbody>
 
-                            {% for card in all_cards %}
+                            {% for card in cards %}
                             <tr>
-                                <th scope="row">{{ cards_idx|get_index:forloop.counter0 }}</th>
+                                <td scope="row">{{ cards_idx|get_index:forloop.counter0 }}</td>
                                 <td>{{ card.card_series }}</td>
                                 <td>{{ card.card_number }}</td>
                                 <td>{{ card.created_date }}</td>
