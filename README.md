@@ -17,7 +17,7 @@
 #
 ### Вэб приложение в работе:
 
-#### *Общий вид приложения.* :
+#### *Общий вид приложения* :
 ![CardApp](https://github.com/slychagin/cards-app/blob/master/demo_gifs/CardApp.gif)
 #
 
