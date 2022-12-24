@@ -37,6 +37,7 @@ def card_generator(request):
             digits_number = int(form.cleaned_data['digits_number'])
             card_number = int(form.cleaned_data['card_number'])
             term_activity = form.cleaned_data['term_activity']
+            total = form.cleaned_data['total']
 
             card_nums = generate_card_numbers(card_series, digits_number, card_number)
 
@@ -44,7 +45,8 @@ def card_generator(request):
                 card = Card(
                     card_series=card_series,
                     card_number=number,
-                    end_activity_date=datetime.now() + timedelta(days=int(term_activity))
+                    end_activity_date=datetime.now() + timedelta(days=int(term_activity)),
+                    total=total
                 )
                 card.save()
 

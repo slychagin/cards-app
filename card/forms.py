@@ -17,32 +17,43 @@ class CardGenerateForm(forms.ModelForm):
 
     class Meta:
         model = Card
-        fields = ('card_series', 'digits_number', 'card_number', 'term_activity')
+        fields = ('card_series', 'digits_number', 'card_number', 'term_activity', 'total')
 
     def __init__(self, *args, **kwargs):
         super(CardGenerateForm, self).__init__(*args, **kwargs)
         self.fields['card_series'].widget.attrs['placeholder'] = 'Кол-во знаков от 2 до 4'
         self.fields['digits_number'].widget.attrs['placeholder'] = 'Кол-во цифр от 4 до 16'
         self.fields['card_number'].widget.attrs['placeholder'] = 'Кол-во карт от 1 до 1000'
+        self.fields['total'].widget.attrs['placeholder'] = 'По умолчанию сумма 0.00'
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
         self.fields['term_activity'].widget.attrs['class'] = 'form-select'
 
     def clean(self):
-        """Validate card_series field"""
+        """Validate card_series and total fields"""
         cleaned_data = super(CardGenerateForm, self).clean()
         card_series = cleaned_data.get('card_series')
+        total = cleaned_data.get('total')
+
+        if total < 0:
+            raise forms.ValidationError(
+                'Сумма не может быть меньше нуля!'
+            )
 
         if len(card_series) < 2:
-            raise forms.ValidationError('Кол-во букв или цифр в поле серия карт должно быть от 2-х до 4-х')
+            raise forms.ValidationError(
+                'Кол-во букв или цифр в поле cерия карт должно быть от 2-х до 4-х'
+            )
 
         for symbol in card_series:
             if symbol not in get_card_series_symbols():
-                raise forms.ValidationError('Серия карты должна содержать латинские, русские буквы или цифры')
+                raise forms.ValidationError(
+                    'Серия карты должна содержать латинские, русские буквы или цифры'
+                )
 
 
 def get_card_series_symbols():
-    """Return a string of symbols for validate card_series field"""
+    """Return a string of letters and digits for validate card_series field"""
     cyrillic_lower_letters = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
     cyrillic_letters = cyrillic_lower_letters + cyrillic_lower_letters.upper()
     card_series_symbols = cyrillic_letters + ascii_letters + digits
